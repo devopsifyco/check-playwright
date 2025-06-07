@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@playwright/test": "^1.43.1"
+  },
+  "scripts": {
+    "test:e2e": "npx playwright test --reporter=junit"
+  }
+} 
