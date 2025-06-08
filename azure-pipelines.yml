@@ -5,30 +5,37 @@ pool:
   name: 'Default'
   vmImage: 'ubuntu-latest'
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '18.x'
-  displayName: 'Install Node.js'
+jobs:
+- job: Preparation
+  displayName: 'Preparation'
+  steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '18.x'
+      displayName: 'Install Node.js'
 
-- script: npm ci
-  displayName: 'Install dependencies'
+    - script: npm ci
+      displayName: 'Install dependencies'
 
-- script: npx playwright install --with-deps
-  displayName: 'Install Playwright browsers'
+    - script: npx playwright install --with-deps
+      displayName: 'Install Playwright browsers'
 
-- script: mkdir -p reports\test-results
-  displayName: 'Create test-results directory'
+    - script: mkdir -p reports\test-results
+      displayName: 'Create test-results directory'
 
-- script: npx playwright test
-  displayName: 'Run Playwright tests'
-  continueOnError: true
-  env:
-    CI: 'true'
+- job: TestAndPublish
+  displayName: 'Run Tests and Publish Results'
+  dependsOn: Preparation
+  steps:
+    - script: npx playwright test
+      displayName: 'Run Playwright tests'
+      continueOnError: true
+      env:
+        CI: 'true'
 
-- task: PublishTestResults@2
-  condition: succeededOrFailed()
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: 'reports/test-results/results.xml'
-    failTaskOnFailedTests: true
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: 'reports/test-results/results.xml'
+        failTaskOnFailedTests: true
