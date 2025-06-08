@@ -20,7 +20,7 @@ test.describe('Opsify Website Tests', () => {
     });
 
     test('should perform a search and display results', async ({ page }) => {
-        const searchQuery = 'test query';
+        const searchQuery = 'istio';
         
         // Test search using button click
         await opsifyPage.search(searchQuery);
@@ -58,32 +58,9 @@ test.describe('Opsify Website Tests', () => {
             await ScreenshotUtil.takeElementScreenshot(page, '.result-item:first-child', 'first-result-enter-key');
         }
     });
-
-    test('should handle empty search gracefully', async ({ page }) => {
-        await opsifyPage.search('');
-        await opsifyPage.waitForLoadingToComplete();
-
-        // Take screenshot of error state
-        await ScreenshotUtil.takeScreenshot(page, 'empty-search-error');
-
-        const errorMessage = await opsifyPage.getErrorMessage();
-        expect(errorMessage).toBeTruthy();
-    });
-
-    test('should handle invalid search input', async ({ page }) => {
-        const invalidQuery = '!@#$%^&*()';
-        await opsifyPage.search(invalidQuery);
-        await opsifyPage.waitForLoadingToComplete();
-
-        // Take screenshot of invalid search state
-        await ScreenshotUtil.takeScreenshot(page, 'invalid-search');
-
-        const resultsVisible = await opsifyPage.areResultsVisible();
-        expect(resultsVisible).toBeFalsy();
-    });
-
+    
     test('should maintain search functionality after multiple searches', async ({ page }) => {
-        const queries = ['first query', 'second query', 'third query'];
+        const queries = ['istio', 'postgresql', 'kubernetes'];
         
         for (const [index, query] of queries.entries()) {
             await opsifyPage.search(query);

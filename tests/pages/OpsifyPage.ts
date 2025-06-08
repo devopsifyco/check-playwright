@@ -4,8 +4,8 @@ import { BasePage } from './BasePage';
 export class OpsifyPage extends BasePage {
     // Selectors
     private readonly searchInput = 'input[type="text"]';
-    private readonly searchButton = 'button[type="submit"]';
-    private readonly resultsContainer = '.results-container';
+    private readonly searchButton = '.search-btn';
+    private readonly resultsContainer = 'table.results-table';
     private readonly errorMessage = '.error-message';
     private readonly loadingSpinner = '.loading-spinner';
 
@@ -68,11 +68,37 @@ export class OpsifyPage extends BasePage {
     }
 
     /**
-     * Get all search results
+     * Get table headers from the results table
      */
-    async getSearchResults(): Promise<string[]> {
+    async getTableHeaders(): Promise<string[]> {
         await this.waitForElement(this.resultsContainer);
-        const results = await this.page.$$(`${this.resultsContainer} .result-item`);
-        return Promise.all(results.map(async result => (await result.textContent()) || ''));
+        const headerCells = await this.page.$$(`${this.resultsContainer} thead tr th`);
+        return Promise.all(headerCells.map(async cell => (await cell.textContent())?.trim() || ''));
+    }
+
+    /**
+     * Get all search results as array of objects (keyed by header)
+     */
+    async getSearchResults(): Promise<Record<string, string>[]> {
+        await this.waitForElement(this.resultsContainer);
+        const headers = await this.getTableHeaders();
+        const rows = await this.page.$$(`${this.resultsContainer} tbody tr`);
+        const results: Record<string, string>[] = [];
+        for (const row of rows) {
+            const cells = await row.$$eval('td', tds => tds.map(td => td.textContent?.trim() || ''));
+            const rowObj: Record<string, string> = {};
+            headers.forEach((header, idx) => {
+                rowObj[header] = cells[idx] || '';
+            });
+            results.push(rowObj);
+        }
+        return results;
+    }
+
+    /**
+     * Check if loading spinner is visible
+     */
+    async isLoadingSpinnerVisible(): Promise<boolean> {
+        return await this.page.isVisible(this.loadingSpinner);
     }
 } 

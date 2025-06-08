@@ -17,10 +17,10 @@ steps:
 - script: npx playwright install --with-deps
   displayName: 'Install Playwright browsers'
 
-- script: mkdir -p test-results
+- script: mkdir -p reports/test-results
   displayName: 'Create test-results directory'
 
-- script: npx playwright test --reporter=junit
+- script: npx playwright test
   displayName: 'Run Playwright tests'
   continueOnError: true
   env:
@@ -30,5 +30,5 @@ steps:
   condition: succeededOrFailed()
   inputs:
     testResultsFormat: 'JUnit'
-    testResultsFiles: 'test-results/results.xml'
+    testResultsFiles: 'reports/test-results/results.xml'
     failTaskOnFailedTests: true 
