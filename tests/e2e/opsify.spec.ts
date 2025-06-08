@@ -14,7 +14,7 @@ test.describe('Opsify Website Tests', () => {
 
     test('should load the homepage successfully', async ({ page }) => {
         const title = await opsifyPage.getPageTitle();
-        expect(title).toBeTruthy();
+        expect(title).toBe('DevOpsify Check');
         // Take screenshot after verifying title
         await ScreenshotUtil.takeScreenshot(page, 'homepage-loaded');
     });

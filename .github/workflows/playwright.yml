@@ -33,22 +33,19 @@ jobs:
           CI: 'true'
         continue-on-error: true
 
-      - name: Generate Playwright HTML report
-        run: npx playwright test --reporter=html
-
       - name: Upload Playwright HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: playwright-report/
+          path: reports/html-report/
 
       - name: Deploy Playwright HTML report to GitHub Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: playwright-report
+          publish_dir: reports/html-report
           publish_branch: gh-pages
           force_orphan: true
 
