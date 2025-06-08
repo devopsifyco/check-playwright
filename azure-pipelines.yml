@@ -17,7 +17,7 @@ steps:
 - script: npx playwright install --with-deps
   displayName: 'Install Playwright browsers'
 
-- script: mkdir -p reports\\test-results
+- script: mkdir -p reports\test-results
   displayName: 'Create test-results directory'
 
 - script: npx playwright test
