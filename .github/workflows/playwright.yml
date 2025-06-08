@@ -28,7 +28,7 @@ jobs:
         run: mkdir -p reports/test-results
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npx playwright test --workers 3
         env:
           CI: 'true'
         continue-on-error: true
