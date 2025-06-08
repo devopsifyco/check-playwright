@@ -23,6 +23,8 @@ steps:
 - script: npx playwright test --reporter=junit --reporter-options outputFile=test-results/results.xml; exit 0
   displayName: 'Run Playwright tests'
   continueOnError: true
+  env:
+    CI: 'true'
 
 - task: PublishTestResults@2
   condition: succeededOrFailed()
