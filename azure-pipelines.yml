@@ -2,6 +2,7 @@ trigger:
 - dev
 
 pool:
+  name: 'Default'
   vmImage: 'ubuntu-latest'
 
 steps:
