@@ -23,7 +23,7 @@ stages:
 
     - script: mkdir -p reports\test-results
       displayName: 'Create test-results directory'
-  - job: Run Tests
+  - job: RunTests
     dependsOn: Prepare
     steps:
     - script: npx playwright test
@@ -31,8 +31,8 @@ stages:
       continueOnError: true
       env:
         CI: 'true'
-  - job: Publish Results
-    dependsOn: Run Tests
+  - job: PublishTestResults
+    dependsOn: RunTests
     steps:
     - task: PublishTestResults@2
       condition: succeededOrFailed()
